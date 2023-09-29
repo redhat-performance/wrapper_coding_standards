@@ -1,0 +1,122 @@
+﻿--------------------------------------------------------------------------------
+BASH Coding Style for test wrappers
+
+Front Matter
+
+All wrappers require a licensing Agreement at the start (exception is simple
+small programs), and a brief description of what the wrapper is doing.
+
+Example
+
+#
+# Copyright (C) Copyright (C) 2021  Pete Rival frival@redhat.com
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+
+
+# Script to build and run HPL
+# Uses AMD BLIS or OpenBLAS library for AMD depending on args
+# Uses Intel MKL or OpenBLAS library for Intel depending on args
+# Uses OpenBLAS for ARM
+
+Comments
+  * Are to appear
+     * A opening comment for the wrapper.
+     * Wherever in the script, it will not be clear to the novice of what is
+       going on.
+  * Follows the indentation of the code
+  * There is a space between the comment indicator and the text.
+  * Needs to explain clearly what is going on.
+  * Full sentences.
+
+
+Example:
+#
+# Check to see if the test tools directory exists.  If it does, we do not need to
+# clone the repo.
+#
+if [ ! -d "test_tools" ]; then
+            git clone $tools_git test_tools
+            if [ $? -ne 0 ]; then
+                    exit_out "pulling git $tools_git failed." 1
+            fi
+Fi
+
+
+Indentations
+  * Indentations are via tab
+  * Functions body are indented one tab
+  * Body of while, if statements, cases are indented one tab.
+
+
+Example
+expand_cpu_range() {
+	local IFS=,
+	set -- $1
+	for range; do
+		case $range in
+			*-*)
+				for (( i=${range%-*}; i<=${range#*-}; i++ )); do
+					echo $i
+				done ;;
+			*) 
+			echo $range ;;
+		esac
+	done
+}
+
+
+Variable names
+  * Variable names are to describe the content, unless it is for a counter for
+    a loop
+  * If the variable name is not a counter, it needs to be declared at the start
+    of the script or function.
+  * Are to be words (or abbreviation that are obvious).  
+  * Words are to be separated by underscores _
+  * Avoid variable names that are similar
+  * Unless there is an overriding reason avoid upper cases.
+
+
+Line length
+  * Try and keep the line lengths at 80 characters or less.  However do not
+    compromise readability to keep the line under 80 characters.
+  * If exceeding 80 characters, see if you can break up the work being done on
+    the line to be multiple steps.
+
+For/While loops
+  * Variable is to have meaning
+  * Body is to be indented
+  * Done statement at the end of the loop is to be in the same position as the
+    for statement.
+
+
+Example
+        
+ 	for arg in "$@"; do
+ 		< body>
+ 	done
+
+
+Spacing
+  * Space shall appear before all ( and [ and 
+  * Space shall appear after all ) and ], exception when a ‘;’ appears
+  * Space shall appear before and after all variable names.
+
+
+Examples
+	if [ $test -eq 1 ]; then
+
+	for ami in $work_with; do
